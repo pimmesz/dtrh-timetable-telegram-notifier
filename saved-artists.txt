@@ -1,0 +1,22 @@
+[
+  "Fred again..",
+  "Stromae",
+  "Paolo Nutini",
+  "070 Shake",
+  "Agar Agar",
+  "Froukje",
+  "IDLES",
+  "Jacob Banks",
+  "Jacob Collier",
+  "Joey Bada$$",
+  "Kamma & Masalo",
+  "Naaz",
+  "Phoenix",
+  "Romy",
+  "Sleaford Mods",
+  "slowthai",
+  "Sticky Fingers",
+  "Weval",
+  "The Whitest Boy Alive",
+  "Working Men's Club"
+]
