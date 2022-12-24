@@ -45,6 +45,7 @@ async function sendTelegramMessage(message) {
 }
 
 async function startWeeklyTimetableLoop() {
+	// cron.schedule("* */1 * * *", async () => {
 	cron.schedule("* * */12 * *", async () => {
 		console.log("running a task every minute");
 		await getTimetableInfo();
@@ -146,16 +147,8 @@ function getUpdatedArtistData(savedArtists, newlyAddedArtistsSpotifyData) {
 
 	const updatedArtistDataIds = updatedArtistData.map((x) => x.id);
 	return updatedArtistData.map((artist) => {
-		const newlyAddedArtist = newlyAddedArtistsSpotifyData.find(
-			(newlyAddedArtist) => newlyAddedArtist.id === artist.id
-		);
-
-		if (newlyAddedArtist) {
-			const tier = getArtistTier(updatedArtistDataIds, newlyAddedArtist.id);
-			return Object.assign({ tier }, artist);
-		}
-
-		return artist;
+		const tier = getArtistTier(updatedArtistDataIds, artist.id);
+		return Object.assign({ tier }, artist);
 	});
 }
 
@@ -183,7 +176,6 @@ async function getTimetableInfo() {
 		// The first param is the data to be stringified
 		// The second param is an optional replacer function which you don't need in this case so null works.
 		// The third param is the number of spaces to use for indentation. 2 and 4 seem to be popular choices.
-		console.log("update text file", updatedArtistData);
 		fs.writeFileSync(
 			"./saved-artists.txt",
 			JSON.stringify(updatedArtistData, null, 2),
