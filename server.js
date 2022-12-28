@@ -183,11 +183,12 @@ async function getTimetableInfo() {
 		);
 
 		const newArtists = findNewlyAddedArtists(savedArtists, updatedArtistData);
-		newArtists.map((artist) =>
+		newArtists.forEach((artist) => {
+			console.log(`New artist - ${artist.name} - ${artist.tier}`);
 			sendTelegramMessage(
 				`***${artist.name}*** has been added to the DTRH lineup!\n(Artist Tier: ***${artist.tier}***)\n[Spotify](${artist.external_urls.spotify})`
-			)
-		);
+			);
+		});
 	}
 }
 
@@ -195,5 +196,5 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
 	startWeeklyTimetableLoop();
-	console.log(`App running on: http://192.168.2.25:${port}`);
+	console.log(`App running on: http://192.168.2.24:${port}`);
 });
