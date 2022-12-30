@@ -159,7 +159,6 @@ async function getArtistInfoFromSpotify(artists) {
 			if (artist !== artistData.name) {
 				return {
 					name: artist,
-					popularity: null,
 				};
 			}
 
@@ -191,10 +190,16 @@ function getArtistTier(idArray, id) {
 }
 
 function getUpdatedArtistData(savedArtists, newlyAddedArtistsSpotifyData) {
-	const updatedArtistData = [
-		...savedArtists,
-		...newlyAddedArtistsSpotifyData,
-	].sort((a, b) => (a.popularity > b.popularity ? -1 : 1));
+	const updatedArtistData = [...savedArtists, ...newlyAddedArtistsSpotifyData]
+		.map((artist) => {
+			if (!artist?.followers?.total) {
+				return Object.assign(artist, { followers: { total: 0 } });
+			}
+			return artist;
+		})
+		.sort((a, b) => {
+			return a.followers.total > b.followers.total ? -1 : 1;
+		});
 
 	const updatedArtistDataIds = updatedArtistData.map((x) => x.id);
 	return updatedArtistData.map((artist) => {
