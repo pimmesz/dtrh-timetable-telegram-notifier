@@ -71,7 +71,7 @@ async function startWeeklyTimetableLoop() {
 	// await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
 
 	// cron.schedule("* */1 * * *", async () => {
-	cron.schedule("* * * */1 *", async () => {
+	cron.schedule("0 0 */1 * * *", async () => {
 		console.log("Run loop at " + moment().format("MMMM Do YYYY, h:mm:ss a"));
 		// Uncomment to test locally
 		await getTimetableInfo();
