@@ -232,10 +232,14 @@ async function getTimetableInfo() {
 	console.log("Start getTimetableInfo");
 	await initializeSpotify();
 
+	console.log("Spotify initialized");
+
 	const savedArtistsFromFile = fs.readFileSync("./saved-artists.txt", "utf8");
 	const savedArtists = savedArtistsFromFile
 		? JSON.parse(savedArtistsFromFile)
 		: [];
+
+	console.log("savedArtists", savedArtists);
 
 	const scrapedArtists = await scrapeTimetable();
 	const newlyAddedArtists = findNewlyAddedArtists(savedArtists, scrapedArtists);
