@@ -36,20 +36,91 @@ app.use(cors());
 
 app.get("/*", (req, res) => res.sendFile(path.join(__dirname)));
 
+function generateTelegramMessage(artists) {
+	let telegramMessage = "";
+	artists.forEach((artist) => {
+		telegramMessage = telegramMessage.concat(
+			`${artist.name} - Tier: <b>${artist.tier}</b>\n`
+		);
+
+		if (artist?.external_urls?.spotify) {
+			telegramMessage = telegramMessage.concat(
+				`<a href="${artist.external_urls.spotify}">Spotify</a>\n\n`
+			);
+		}
+	});
+
+	return telegramMessage;
+}
+
 async function sendTelegramMessage(message) {
 	await telegramClient.sendMessage(process.env.TELEGRAM_CHAT_ID, message, {
 		disableWebPagePreview: true,
 		disableNotification: true,
-		parseMode: "Markdown",
+		parseMode: "html",
 	});
 }
 
 async function startWeeklyTimetableLoop() {
-	// cron.schedule("* */1 * * *", async () => {
-	cron.schedule("* * */12 * *", async () => {
+	// Comment out to test locally
+	await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
+
+	cron.schedule("* * */1 * *", async () => {
 		console.log("running a task every minute");
+		// Uncomment to test locally
+		// await getTelegramMessages();
 		await getTimetableInfo();
 	});
+}
+
+async function getTelegramMessages() {
+	const savedArtistsFromFile = fs.readFileSync("./saved-artists.txt", "utf8");
+	const savedArtists = savedArtistsFromFile
+		? JSON.parse(savedArtistsFromFile)
+		: [];
+
+	const oldMessagesIdsFromFile = fs.readFileSync(
+		"./old-message-ids.txt",
+		"utf8"
+	);
+	const oldMessagesIds = oldMessagesIdsFromFile
+		? JSON.parse(oldMessagesIdsFromFile)
+		: [];
+
+	const allMessages = await telegramClient.getUpdates();
+	const newMessages = allMessages.filter((message) => {
+		return !oldMessagesIds.some((oldMessageId) => {
+			return message.updateId === oldMessageId;
+		});
+	});
+
+	const isListRequested = newMessages.some((newMessage) => {
+		const newMessageText = newMessage?.message?.text?.toLocaleLowerCase();
+		return (
+			newMessageText.includes("list") ||
+			newMessageText.includes("lineup") ||
+			newMessageText.includes("line-up")
+		);
+	});
+
+	console.log(isListRequested);
+	if (!isListRequested) {
+		return;
+	}
+
+	const newMessagesIds = newMessages.map((newMessage) => newMessage.updateId);
+
+	// The first param is the data to be stringified
+	// The second param is an optional replacer function which you don't need in this case so null works.
+	// The third param is the number of spaces to use for indentation. 2 and 4 seem to be popular choices.
+	fs.writeFileSync(
+		"./old-message-ids.txt",
+		JSON.stringify([...oldMessagesIds, ...newMessagesIds], null, 2),
+		"utf-8"
+	);
+
+	const telegramMessage = generateTelegramMessage(savedArtists);
+	sendTelegramMessage(telegramMessage);
 }
 
 async function initializeSpotify() {
@@ -183,18 +254,28 @@ async function getTimetableInfo() {
 		);
 
 		const newArtists = findNewlyAddedArtists(savedArtists, updatedArtistData);
-		newArtists.forEach((artist) => {
-			console.log(`New artist - ${artist.name} - ${artist.tier}`);
-			sendTelegramMessage(
-				`***${artist.name}*** has been added to the DTRH lineup!\n(Artist Tier: ***${artist.tier}***)\n[Spotify](${artist.external_urls.spotify})`
-			);
-		});
+		let telegramMessage = generateTelegramMessage(newArtists);
+
+		sendTelegramMessage(
+			"The following artists have been added to the DTRH lineup!\n\n".concat(
+				telegramMessage
+			)
+		);
 	}
 }
+
+app.get("/telegram-update", (req, res, next) => {
+	console.log("telegram update");
+	(async () => {
+		await getTelegramMessages();
+	})().catch((err) => {
+		console.error(err);
+	});
+});
 
 const server = http.createServer(app);
 
 server.listen(port, () => {
 	startWeeklyTimetableLoop();
-	console.log(`App running on: http://192.168.2.24:${port}`);
+	console.log(`App running on: http://192.168.2.25:${port}`);
 });
