@@ -1,2 +1,4 @@
 node_modules
 .env
+old-message-ids.txt
+saved-artists.txt
