@@ -289,11 +289,11 @@ app.get("/telegram-update", (req, res, next) => {
 	console.log("telegram update", req);
 	(async () => {
 		await getTelegramMessages();
-		res.send(200);
 	})().catch((err) => {
 		console.error(err);
-		res.send(200);
 	});
+
+	res.send(200);
 });
 
 const server = http.createServer(app);
