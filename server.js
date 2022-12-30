@@ -69,7 +69,7 @@ async function sendTelegramMessage(message) {
 
 async function startWeeklyTimetableLoop() {
 	// Comment out to test locally
-	// await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
+	await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
 
 	cron.schedule("* * */1 * *", async () => {
 		console.log("running a task every minute");
@@ -282,6 +282,6 @@ app.get("/telegram-update", (req, res, next) => {
 const server = http.createServer(app);
 
 server.listen(port, () => {
-	// startWeeklyTimetableLoop();
+	startWeeklyTimetableLoop();
 	console.log(`App running on: http://192.168.2.25:${port}`);
 });
