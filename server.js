@@ -70,11 +70,11 @@ async function setupWebhook() {
 	await telegramClient.setWebhook(`${process.env.SERVER_URL}/webhook`);
 }
 
-async function startWeeklyTimetableLoop() {
+async function startWeeklyLineUpLoop() {
 	// cron.schedule("* */1 * * *", async () => {
 	cron.schedule("0 0 */1 * * *", async () => {
 		console.log("Run loop at " + moment().format("MMMM Do YYYY, h:mm:ss a"));
-		await getTimetableInfo();
+		await getLineUp();
 	});
 }
 
@@ -85,9 +85,9 @@ async function getTelegramMessages(message) {
 		: [];
 
 	const isListRequested =
-		message.includes("list") ||
-		message.includes("lineup") ||
-		message.includes("line-up");
+		message.toLowerCase().includes("list") ||
+		message.toLowerCase().includes("lineup") ||
+		message.toLowerCase().includes("line-up");
 
 	if (!isListRequested) {
 		return;
@@ -111,7 +111,7 @@ async function initializeSpotify() {
 	spotifyApi.setAccessToken(spotifyAccessToken);
 }
 
-async function scrapeTimetable() {
+async function scrapeLineUp() {
 	try {
 		const browser = await puppeteer.launch({
 			executablePath: "chromium-browser",
@@ -203,8 +203,8 @@ function getUpdatedArtistData(savedArtists, newlyAddedArtistsSpotifyData) {
 	});
 }
 
-async function getTimetableInfo() {
-	console.log("Start getTimetableInfo");
+async function getLineUp() {
+	console.log("Start getLineUp");
 	await initializeSpotify();
 
 	const savedArtistsFromFile = fs.readFileSync("./saved-artists.txt", "utf8");
@@ -212,7 +212,7 @@ async function getTimetableInfo() {
 		? JSON.parse(savedArtistsFromFile)
 		: [];
 
-	const scrapedArtists = await scrapeTimetable();
+	const scrapedArtists = await scrapeLineUp();
 	const newlyAddedArtists = findNewlyAddedArtists(savedArtists, scrapedArtists);
 
 	console.log(`${newlyAddedArtists.length} new artists found`);
@@ -249,6 +249,10 @@ async function getTimetableInfo() {
 // Endpoints
 app.post("/webhook", async (req, res) => {
 	await getTelegramMessages(req.body.message.text);
+
+	if (req.body.message.text.toLowerCase() === "getlineup") {
+		await getLineUp();
+	}
 	res.send(req.body);
 });
 
@@ -257,7 +261,7 @@ const server = http.createServer(app);
 server.listen(port, async () => {
 	try {
 		await setupWebhook();
-		await startWeeklyTimetableLoop();
+		await startWeeklyLineUpLoop();
 		console.log(`App running port: ${port}`);
 	} catch (error) {
 		console.log(error);
