@@ -238,14 +238,10 @@ async function getTimetableInfo() {
 	console.log("Start getTimetableInfo");
 	await initializeSpotify();
 
-	console.log("Spotify initialized");
-
 	const savedArtistsFromFile = fs.readFileSync("./saved-artists.txt", "utf8");
 	const savedArtists = savedArtistsFromFile
 		? JSON.parse(savedArtistsFromFile)
 		: [];
-
-	console.log("savedArtists", savedArtists);
 
 	const scrapedArtists = await scrapeTimetable();
 	const newlyAddedArtists = findNewlyAddedArtists(savedArtists, scrapedArtists);
@@ -264,8 +260,6 @@ async function getTimetableInfo() {
 		// The first param is the data to be stringified
 		// The second param is an optional replacer function which you don't need in this case so null works.
 		// The third param is the number of spaces to use for indentation. 2 and 4 seem to be popular choices.
-
-		console.log(`Save ${newlyAddedArtists.length} new artists`);
 		fs.writeFileSync(
 			"./saved-artists.txt",
 			JSON.stringify(updatedArtistData, null, 2),
