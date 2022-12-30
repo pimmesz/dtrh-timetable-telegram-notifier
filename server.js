@@ -94,7 +94,11 @@ async function getTelegramMessages(message) {
 	}
 
 	const telegramMessage = generateTelegramMessage(savedArtists);
-	sendTelegramMessage(telegramMessage);
+	sendTelegramMessage(
+		"The full DTRH lineup ranked by Spotify followers!\n\n".concat(
+			telegramMessage
+		)
+	);
 }
 
 async function initializeSpotify() {
