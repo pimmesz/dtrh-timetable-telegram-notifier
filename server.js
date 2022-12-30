@@ -70,10 +70,10 @@ async function startWeeklyTimetableLoop() {
 	// await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
 
 	cron.schedule("* * */1 * *", async () => {
-		console.log("running a task every minute");
+		console.log("Run loop");
 		// Uncomment to test locally
-		await getTelegramMessages();
 		await getTimetableInfo();
+		await getTelegramMessages();
 	});
 }
 
@@ -250,6 +250,8 @@ async function getTimetableInfo() {
 		// The first param is the data to be stringified
 		// The second param is an optional replacer function which you don't need in this case so null works.
 		// The third param is the number of spaces to use for indentation. 2 and 4 seem to be popular choices.
+
+		console.log(`Save ${updatedArtistData.length} new artists`);
 		fs.writeFileSync(
 			"./saved-artists.txt",
 			JSON.stringify(updatedArtistData, null, 2),
