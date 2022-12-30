@@ -144,7 +144,9 @@ async function initializeSpotify() {
 
 async function scrapeTimetable() {
 	try {
-		const browser = await puppeteer.launch();
+		const browser = await puppeteer.launch({
+			executablePath: "chromium-browser",
+		});
 		const page = await browser.newPage();
 
 		await page.goto("https://downtherabbithole.nl/programma");
