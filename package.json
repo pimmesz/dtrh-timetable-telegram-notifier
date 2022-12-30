@@ -11,6 +11,7 @@
 		"express": "^4.17.3",
 		"messaging-api-telegram": "^1.1.0",
 		"node-cron": "^3.0.2",
+		"moment": "^2.29.4",
 		"puppeteer": "^19.4.1",
 		"spotify-web-api-node": "^5.0.2"
 	},

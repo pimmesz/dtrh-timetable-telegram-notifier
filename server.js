@@ -4,6 +4,7 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 import path from "path";
+import moment from "moment";
 import puppeteer from "puppeteer";
 import { fileURLToPath } from "url";
 import * as fs from "fs";
@@ -69,8 +70,9 @@ async function startWeeklyTimetableLoop() {
 	// Comment out to test locally
 	// await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
 
+	// cron.schedule("* */1 * * *", async () => {
 	cron.schedule("* * */1 * *", async () => {
-		console.log("Run loop");
+		console.log("Run loop at " + moment().format("MMMM Do YYYY, h:mm:ss a"));
 		// Uncomment to test locally
 		await getTimetableInfo();
 		await getTelegramMessages();
@@ -237,6 +239,7 @@ async function getTimetableInfo() {
 	const scrapedArtists = await scrapeTimetable();
 	const newlyAddedArtists = findNewlyAddedArtists(savedArtists, scrapedArtists);
 
+	console.log(`${newlyAddedArtists.length} new artists found`);
 	if (newlyAddedArtists.length) {
 		const newlyAddedArtistsSpotifyData = await getArtistInfoFromSpotify(
 			newlyAddedArtists
@@ -251,7 +254,7 @@ async function getTimetableInfo() {
 		// The second param is an optional replacer function which you don't need in this case so null works.
 		// The third param is the number of spaces to use for indentation. 2 and 4 seem to be popular choices.
 
-		console.log(`Save ${updatedArtistData.length} new artists`);
+		console.log(`Save ${newlyAddedArtists.length} new artists`);
 		fs.writeFileSync(
 			"./saved-artists.txt",
 			JSON.stringify(updatedArtistData, null, 2),
