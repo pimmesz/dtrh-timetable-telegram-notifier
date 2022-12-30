@@ -229,6 +229,7 @@ function getUpdatedArtistData(savedArtists, newlyAddedArtistsSpotifyData) {
 }
 
 async function getTimetableInfo() {
+	console.log("Start getTimetableInfo");
 	await initializeSpotify();
 
 	const savedArtistsFromFile = fs.readFileSync("./saved-artists.txt", "utf8");
