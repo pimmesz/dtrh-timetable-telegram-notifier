@@ -31,7 +31,6 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 app.use(express.static(__dirname + "/"));
-console.log(__dirname + "/");
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -55,7 +54,6 @@ function generateTelegramMessage(artists) {
 }
 
 async function sendTelegramMessage(message) {
-	console.log("Send telegram message:", message);
 	if (!message) {
 		return;
 	}
@@ -109,7 +107,6 @@ async function getTelegramMessages() {
 		);
 	});
 
-	console.log(isListRequested);
 	if (!isListRequested) {
 		return;
 	}
