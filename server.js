@@ -23,7 +23,7 @@ const port = process.env.PORT || 3002;
 dotenv.config();
 
 const telegramClient = new TelegramClient({
-	accessToken: process.env.TELEGRAM_BOT,
+	accessToken: process.env.TELEGRAM_BOT_TOKEN,
 });
 
 const spotifyApi = new SpotifyWebApi({
@@ -66,71 +66,32 @@ async function sendTelegramMessage(message) {
 	});
 }
 
+async function setupWebhook() {
+	await telegramClient.setWebhook(`${process.env.SERVER_URL}/webhook`);
+}
+
 async function startWeeklyTimetableLoop() {
-	// Comment out to test locally
-	await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
-	const webhookInfo = await telegramClient.getWebhookInfo().catch((error) => {
-		console.log(error); // the formatted error message
-		console.log(error.stack); // stack trace of the error
-		console.log(error.config); // axios request config
-		console.log(error.request); // axios HTTP request
-		console.log(error.response); // axios HTTP response
-	});
-
-	console.log("webhookInfo", webhookInfo);
-
 	// cron.schedule("* */1 * * *", async () => {
 	cron.schedule("0 0 */1 * * *", async () => {
 		console.log("Run loop at " + moment().format("MMMM Do YYYY, h:mm:ss a"));
-		// Uncomment to test locally
 		await getTimetableInfo();
 	});
 }
 
-async function getTelegramMessages() {
+async function getTelegramMessages(message) {
 	const savedArtistsFromFile = fs.readFileSync("./saved-artists.txt", "utf8");
 	const savedArtists = savedArtistsFromFile
 		? JSON.parse(savedArtistsFromFile)
 		: [];
 
-	const oldMessagesIdsFromFile = fs.readFileSync(
-		"./old-message-ids.txt",
-		"utf8"
-	);
-	const oldMessagesIds = oldMessagesIdsFromFile
-		? JSON.parse(oldMessagesIdsFromFile)
-		: [];
-
-	const allMessages = await telegramClient.getUpdates();
-	const newMessages = allMessages.filter((message) => {
-		return !oldMessagesIds.some((oldMessageId) => {
-			return message.updateId === oldMessageId;
-		});
-	});
-
-	const isListRequested = newMessages.some((newMessage) => {
-		const newMessageText = newMessage?.message?.text?.toLocaleLowerCase();
-		return (
-			newMessageText.includes("list") ||
-			newMessageText.includes("lineup") ||
-			newMessageText.includes("line-up")
-		);
-	});
+	const isListRequested =
+		message.includes("list") ||
+		message.includes("lineup") ||
+		message.includes("line-up");
 
 	if (!isListRequested) {
 		return;
 	}
-
-	const newMessagesIds = newMessages.map((newMessage) => newMessage.updateId);
-
-	// The first param is the data to be stringified
-	// The second param is an optional replacer function which you don't need in this case so null works.
-	// The third param is the number of spaces to use for indentation. 2 and 4 seem to be popular choices.
-	fs.writeFileSync(
-		"./old-message-ids.txt",
-		JSON.stringify([...oldMessagesIds, ...newMessagesIds], null, 2),
-		"utf-8"
-	);
 
 	const telegramMessage = generateTelegramMessage(savedArtists);
 	sendTelegramMessage(telegramMessage);
@@ -285,20 +246,20 @@ async function getTimetableInfo() {
 	}
 }
 
-app.get("/telegram-update", (req, res, next) => {
-	console.log("telegram update", req);
-	// (async () => {
-	// 	await getTelegramMessages();
-	// })().catch((err) => {
-	// 	console.error(err);
-	// });
-
-	res.status(200);
+// Endpoints
+app.post("/webhook", async (req, res) => {
+	await getTelegramMessages(req.body.message.text);
+	res.send(req.body);
 });
 
 const server = http.createServer(app);
 
-server.listen(port, () => {
-	startWeeklyTimetableLoop();
-	console.log(`App running on: http://192.168.2.140:${port}`);
+server.listen(port, async () => {
+	try {
+		await setupWebhook();
+		await startWeeklyTimetableLoop();
+		console.log(`App running port: ${port}`);
+	} catch (error) {
+		console.log(error);
+	}
 });
