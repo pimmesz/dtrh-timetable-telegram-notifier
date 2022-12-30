@@ -68,14 +68,22 @@ async function sendTelegramMessage(message) {
 
 async function startWeeklyTimetableLoop() {
 	// Comment out to test locally
-	// await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
+	await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
+	const webhookInfo = await telegramClient.getWebhookInfo().catch((error) => {
+		console.log(error); // the formatted error message
+		console.log(error.stack); // stack trace of the error
+		console.log(error.config); // axios request config
+		console.log(error.request); // axios HTTP request
+		console.log(error.response); // axios HTTP response
+	});
+
+	console.log("webhookInfo", webhookInfo);
 
 	// cron.schedule("* */1 * * *", async () => {
 	cron.schedule("0 0 */1 * * *", async () => {
 		console.log("Run loop at " + moment().format("MMMM Do YYYY, h:mm:ss a"));
 		// Uncomment to test locally
 		await getTimetableInfo();
-		await getTelegramMessages();
 	});
 }
 
@@ -278,11 +286,13 @@ async function getTimetableInfo() {
 }
 
 app.get("/telegram-update", (req, res, next) => {
-	console.log("telegram update");
+	console.log("telegram update", req);
 	(async () => {
 		await getTelegramMessages();
+		res.send(200);
 	})().catch((err) => {
 		console.error(err);
+		res.send(200);
 	});
 });
 
@@ -290,5 +300,5 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
 	startWeeklyTimetableLoop();
-	console.log(`App running on: http://192.168.2.25:${port}`);
+	console.log(`App running on: http://192.168.2.140:${port}`);
 });
