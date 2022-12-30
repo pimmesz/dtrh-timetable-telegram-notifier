@@ -69,12 +69,12 @@ async function sendTelegramMessage(message) {
 
 async function startWeeklyTimetableLoop() {
 	// Comment out to test locally
-	await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
+	// await telegramClient.setWebhook("https://dtrhbot.pim.gg/telegram-update");
 
 	cron.schedule("* * */1 * *", async () => {
 		console.log("running a task every minute");
 		// Uncomment to test locally
-		// await getTelegramMessages();
+		await getTelegramMessages();
 		await getTimetableInfo();
 	});
 }
