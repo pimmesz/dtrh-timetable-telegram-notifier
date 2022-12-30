@@ -143,25 +143,29 @@ async function initializeSpotify() {
 }
 
 async function scrapeTimetable() {
-	const browser = await puppeteer.launch();
-	const page = await browser.newPage();
+	try {
+		const browser = await puppeteer.launch();
+		const page = await browser.newPage();
 
-	await page.goto("https://downtherabbithole.nl/programma");
+		await page.goto("https://downtherabbithole.nl/programma");
 
-	// Wait for the results page to load and display the results.
-	const resultsSelector = ".card";
-	await page.waitForSelector(resultsSelector);
+		// Wait for the results page to load and display the results.
+		const resultsSelector = ".card";
+		await page.waitForSelector(resultsSelector);
 
-	// Extract the results from the page.
-	const scrapedArtists = await page.evaluate(() => {
-		return [...document.querySelectorAll("a.card")].map((card) => {
-			return card.title;
+		// Extract the results from the page.
+		const scrapedArtists = await page.evaluate(() => {
+			return [...document.querySelectorAll("a.card")].map((card) => {
+				return card.title;
+			});
 		});
-	});
 
-	await browser.close();
+		await browser.close();
 
-	return scrapedArtists;
+		return scrapedArtists;
+	} catch (e) {
+		console.log(e);
+	}
 }
 
 function findNewlyAddedArtists(savedArtists, scrapedArtists) {
