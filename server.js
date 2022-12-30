@@ -287,11 +287,11 @@ async function getTimetableInfo() {
 
 app.get("/telegram-update", (req, res, next) => {
 	console.log("telegram update", req);
-	(async () => {
-		await getTelegramMessages();
-	})().catch((err) => {
-		console.error(err);
-	});
+	// (async () => {
+	// 	await getTelegramMessages();
+	// })().catch((err) => {
+	// 	console.error(err);
+	// });
 
 	res.status(200);
 });
