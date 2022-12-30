@@ -293,7 +293,7 @@ app.get("/telegram-update", (req, res, next) => {
 		console.error(err);
 	});
 
-	res.send(200);
+	res.status(200);
 });
 
 const server = http.createServer(app);
