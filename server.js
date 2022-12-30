@@ -54,6 +54,11 @@ function generateTelegramMessage(artists) {
 }
 
 async function sendTelegramMessage(message) {
+	console.log("Send telegram message:", message);
+	if (!message) {
+		return;
+	}
+
 	await telegramClient.sendMessage(process.env.TELEGRAM_CHAT_ID, message, {
 		disableWebPagePreview: true,
 		disableNotification: true,
