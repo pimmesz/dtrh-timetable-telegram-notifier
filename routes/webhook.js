@@ -2,7 +2,7 @@ import express from "express";
 import { respondToTelegramMessages } from "../utils/telegramUtils.js";
 import { getLineUp } from "../utils/spotifyUtils.js";
 const router = express.Router();
-import * as Telegram from "./utils/telegramUtils.js";
+import * as Telegram from "./../utils/telegramUtils.js";
 
 router.post("/", async (req, res) => {
 	console.log("message received", req.body.message.text);
