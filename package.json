@@ -9,9 +9,10 @@
 		"cors": "^2.8.5",
 		"dotenv": "^16.0.3",
 		"express": "^4.17.3",
+		"human-readable-numbers": "^0.9.5",
 		"messaging-api-telegram": "^1.1.0",
-		"node-cron": "^3.0.2",
 		"moment": "^2.29.4",
+		"node-cron": "^3.0.2",
 		"puppeteer": "^19.4.1",
 		"spotify-web-api-node": "^5.0.2"
 	},
