@@ -2,6 +2,7 @@ import express from "express";
 import { respondToTelegramMessages } from "../utils/telegramUtils.js";
 import { getLineUp } from "../utils/spotifyUtils.js";
 const router = express.Router();
+import * as Telegram from "./utils/telegramUtils.js";
 
 router.post("/", async (req, res) => {
 	console.log("message received", req.body.message.text);
@@ -14,7 +15,13 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-	res.send("Webhook GET works!");
+	res.send("Set Telegram webhook!!");
+
+	try {
+		await Telegram.setupWebhook();
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 export { router as webhookRoute };
