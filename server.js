@@ -26,8 +26,8 @@ app.use(cors());
 app.get("/*", (req, res) => res.sendFile(__dirname));
 
 async function startDataCollectionCronjob() {
-	// cron.schedule("0 0 */1 * * *", async () => {
-	cron.schedule("* */1 * * *", async () => {
+	// cron.schedule("* */1 * * *", async () => {
+	cron.schedule("0 0 */1 * * *", async () => {
 		console.log("Run loop at " + moment().format("MMMM Do YYYY, h:mm:ss a"));
 		await Spotify.getLineUp();
 	});
