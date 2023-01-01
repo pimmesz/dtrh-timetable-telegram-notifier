@@ -10,15 +10,38 @@ const telegramClient = new TelegramClient({
 	accessToken: process.env.TELEGRAM_BOT_TOKEN,
 });
 
-async function getTelegramMessages(message) {
+async function respondToTelegramMessages(message) {
 	const savedArtists = Spotify.getArtistsFromFile();
 
-	const isListRequested =
-		message.toLowerCase().includes("list") ||
-		message.toLowerCase().includes("lineup") ||
-		message.toLowerCase().includes("line-up");
+	const isListRequested = [
+		"list",
+		"lineup",
+		"line-up",
+		"timetable",
+		"artists",
+	].some((listRequestWord) => message.toLowerCase().includes(listRequestWord));
 
 	if (!isListRequested) {
+		return;
+	}
+
+	const isListSortRequested = ["popularity"].some((listRequestWord) =>
+		message.toLowerCase().includes(listRequestWord)
+	);
+
+	if (isListSortRequested) {
+		const savedArtistSortedByPopularity = Spotify.sortArtistData(
+			savedArtists,
+			"popularity"
+		);
+		const telegramMessage = generateTelegramMessage(
+			savedArtistSortedByPopularity
+		);
+		sendTelegramMessage(
+			"The full DTRH line-up ranked by Spotify popularity!\n\n".concat(
+				telegramMessage
+			)
+		);
 		return;
 	}
 
@@ -63,6 +86,12 @@ function generateTelegramMessage(artists) {
 			);
 		}
 
+		if (artist?.popularity) {
+			telegramMessage = telegramMessage.concat(
+				`Popularity index - ${artist.popularity}\n`
+			);
+		}
+
 		if (artist?.external_urls?.spotify) {
 			telegramMessage = telegramMessage.concat(
 				`<a href="${artist.external_urls.spotify}">Spotify</a>\n\n`
@@ -74,7 +103,7 @@ function generateTelegramMessage(artists) {
 }
 
 export {
-	getTelegramMessages,
+	respondToTelegramMessages,
 	sendTelegramMessage,
 	setupWebhook,
 	generateTelegramMessage,

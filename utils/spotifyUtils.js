@@ -13,31 +13,7 @@ const spotifyApi = new SpotifyWebApi({
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
-function getArtistsFromFile() {
-	const savedArtistsFromFile = fs.readFileSync(
-		__dirname + "/saved-artists.txt",
-		"utf8"
-	);
-	const savedArtists = savedArtistsFromFile
-		? JSON.parse(savedArtistsFromFile)
-		: [];
-	return savedArtists;
-}
-
-function sortArtistData(artistData, sortBy) {
-	if (sortBy === "popularity") {
-		return artistData.sort((a, b) => {
-			return a.popularity > b.popularity ? -1 : 1;
-		});
-	}
-
-	return artistData.sort((a, b) => {
-		return a.followers.total > b.followers.total ? -1 : 1;
-	});
-}
-
 async function getLineUp() {
-	console.log("Start getLineUp");
 	await initializeSpotify();
 
 	const savedArtists = getArtistsFromFile();
@@ -71,6 +47,29 @@ async function getLineUp() {
 			)
 		);
 	}
+}
+
+function getArtistsFromFile() {
+	const savedArtistsFromFile = fs.readFileSync(
+		__dirname + "/saved-artists.txt",
+		"utf8"
+	);
+	const savedArtists = savedArtistsFromFile
+		? JSON.parse(savedArtistsFromFile)
+		: [];
+	return savedArtists;
+}
+
+function sortArtistData(artistData, sortBy) {
+	if (sortBy === "popularity") {
+		return artistData.sort((a, b) => {
+			return a.popularity > b.popularity ? -1 : 1;
+		});
+	}
+
+	return artistData.sort((a, b) => {
+		return a.followers.total > b.followers.total ? -1 : 1;
+	});
 }
 
 async function initializeSpotify() {
@@ -192,4 +191,4 @@ function combineArtistData(savedArtists, newArtistsSpotifyData) {
 	});
 }
 
-export { getLineUp, getArtistsFromFile };
+export { getLineUp, getArtistsFromFile, sortArtistData };
