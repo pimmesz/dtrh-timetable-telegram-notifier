@@ -12,4 +12,9 @@ router.post("/", async (req, res) => {
 	}
 	res.send(req.body);
 });
+
+router.get("/", async (req, res) => {
+	res.send("Webhook GET works!");
+});
+
 export { router as webhookRoute };
