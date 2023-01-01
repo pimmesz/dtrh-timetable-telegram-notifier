@@ -8,6 +8,7 @@ import moment from "moment";
 import * as cron from "node-cron";
 
 // Utils
+import * as Telegram from "./utils/telegramUtils.js";
 import * as Spotify from "./utils/spotifyUtils.js";
 
 // Routes
@@ -39,6 +40,7 @@ const server = http.createServer(app);
 
 server.listen(port, async () => {
 	try {
+		await Telegram.setupWebhook();
 		await startDataCollectionCronjob();
 		console.log(`App running port: ${port}`);
 	} catch (error) {
