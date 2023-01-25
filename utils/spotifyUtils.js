@@ -1,15 +1,10 @@
-import * as dotenv from "dotenv";
 import * as fs from "fs";
 import path from "path";
+const __dirname = path.resolve();
+import * as dotenv from "dotenv";
 import puppeteer from "puppeteer";
 import SpotifyWebApi from "spotify-web-api-node";
 import * as Telegram from "./telegramUtils.js";
-let __dirname = path.resolve();
-__dirname =
-	__dirname +
-	(process.env.ENVIRONMENT === "production"
-		? "/dtrh-timetable-telegram-notifier"
-		: "");
 
 dotenv.config();
 

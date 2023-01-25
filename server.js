@@ -1,5 +1,4 @@
 // Dependencies
-import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
@@ -15,16 +14,8 @@ import * as Spotify from "./utils/spotifyUtils.js";
 // Routes
 import { webhookRoute } from "./routes/webhook.js";
 
-dotenv.config({ path: path.resolve("./.env") });
-console.log(path.resolve("./.env"));
-
-let __dirname = path.resolve();
-__dirname =
-	__dirname +
-	(process.env.ENVIRONMENT === "production"
-		? "/dtrh-timetable-telegram-notifier"
-		: "");
-console.log(__dirname);
+const __dirname = path.join(__dirname, "");
+console.log("TEST", __dirname);
 
 const app = express();
 const port = process.env.PORT || 3002;
