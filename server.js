@@ -14,7 +14,12 @@ import * as Spotify from "./utils/spotifyUtils.js";
 // Routes
 import { webhookRoute } from "./routes/webhook.js";
 
-const __dirname = path.resolve();
+let __dirname = path.resolve();
+__dirname =
+	__dirname + process.env.ENVIRONMENT === "production"
+		? "/dtrh-timetable-telegram-notifier"
+		: "";
+console.log(__dirname);
 
 const app = express();
 const port = process.env.PORT || 3002;
