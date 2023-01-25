@@ -70,6 +70,7 @@ async function sendTelegramMessage(message) {
 }
 
 async function setupWebhook() {
+	console.log("setupWebhook", process.env.SERVER_URL);
 	await telegramClient.setWebhook(`${process.env.SERVER_URL}/webhook`);
 }
 
