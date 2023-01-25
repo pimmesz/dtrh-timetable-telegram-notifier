@@ -14,8 +14,9 @@ import * as Spotify from "./utils/spotifyUtils.js";
 // Routes
 import { webhookRoute } from "./routes/webhook.js";
 
-const __dirname = path.join(__dirname, "");
-console.log("TEST", __dirname);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log("FIX ME", __dirname);
 
 const app = express();
 const port = process.env.PORT || 3002;
