@@ -15,7 +15,8 @@ import * as Spotify from "./utils/spotifyUtils.js";
 // Routes
 import { webhookRoute } from "./routes/webhook.js";
 
-dotenv.config();
+dotenv.config({ path: path.resolve("./.env") });
+console.log(path.resolve("./.env"));
 
 let __dirname = path.resolve();
 __dirname =
