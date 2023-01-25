@@ -1,6 +1,6 @@
+import * as dotenv from "dotenv";
 import * as fs from "fs";
 import path from "path";
-import * as dotenv from "dotenv";
 import puppeteer from "puppeteer";
 import SpotifyWebApi from "spotify-web-api-node";
 import * as Telegram from "./telegramUtils.js";
