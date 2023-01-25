@@ -1,10 +1,13 @@
 import * as fs from "fs";
 import path from "path";
-const __dirname = path.resolve();
+import { fileURLToPath } from "url";
 import * as dotenv from "dotenv";
 import puppeteer from "puppeteer";
 import SpotifyWebApi from "spotify-web-api-node";
 import * as Telegram from "./telegramUtils.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
