@@ -6,6 +6,7 @@ import http from "http";
 import path from "path";
 import moment from "moment";
 import * as cron from "node-cron";
+import * as dotenv from "dotenv";
 
 // Utils
 import * as Telegram from "./utils/telegramUtils.js";
@@ -13,6 +14,8 @@ import * as Spotify from "./utils/spotifyUtils.js";
 
 // Routes
 import { webhookRoute } from "./routes/webhook.js";
+
+dotenv.config();
 
 let __dirname = path.resolve();
 __dirname =
