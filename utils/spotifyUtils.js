@@ -37,7 +37,7 @@ async function getLineUp() {
 		// The second param is an optional replacer function which you don't need in this case so null works.
 		// The third param is the number of spaces to use for indentation. 2 and 4 seem to be popular choices.
 		fs.writeFileSync(
-			__dirname + "/saved-artists.txt",
+			__dirname + "/../saved-artists.txt",
 			JSON.stringify(combinedArtistData, null, 2),
 			"utf-8"
 		);
@@ -54,7 +54,7 @@ async function getLineUp() {
 
 function getArtistsFromFile() {
 	const savedArtistsFromFile = fs.readFileSync(
-		__dirname + "/saved-artists.txt",
+		__dirname + "/../saved-artists.txt",
 		"utf8"
 	);
 	const savedArtists = savedArtistsFromFile

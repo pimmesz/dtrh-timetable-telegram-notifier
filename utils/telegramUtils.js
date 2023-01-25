@@ -75,8 +75,6 @@ async function sendTelegramMessage(message) {
 }
 
 async function setupWebhook() {
-	console.log("setupWebhook", process.env.SERVER_URL);
-	console.log("adsfsadfs", __dirname + ".env");
 	await telegramClient.setWebhook(`${process.env.SERVER_URL}/webhook`);
 }
 
