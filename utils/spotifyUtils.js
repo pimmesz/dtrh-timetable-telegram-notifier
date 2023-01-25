@@ -6,9 +6,10 @@ import SpotifyWebApi from "spotify-web-api-node";
 import * as Telegram from "./telegramUtils.js";
 let __dirname = path.resolve();
 __dirname =
-	__dirname + process.env.ENVIRONMENT === "production"
+	__dirname +
+	(process.env.ENVIRONMENT === "production"
 		? "/dtrh-timetable-telegram-notifier"
-		: "";
+		: "");
 
 dotenv.config();
 

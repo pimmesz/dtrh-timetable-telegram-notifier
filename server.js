@@ -16,9 +16,10 @@ import { webhookRoute } from "./routes/webhook.js";
 
 let __dirname = path.resolve();
 __dirname =
-	__dirname + process.env.ENVIRONMENT === "production"
+	__dirname +
+	(process.env.ENVIRONMENT === "production"
 		? "/dtrh-timetable-telegram-notifier"
-		: "";
+		: "");
 console.log(__dirname);
 
 const app = express();
