@@ -4,7 +4,7 @@ const { TelegramClient } = messagingApiTelegram;
 import * as Spotify from "./spotifyUtils.js";
 import HRNumbers from "human-readable-numbers";
 
-dotenv.config();
+dotenv.config({ path: __dirname + ".env" });
 
 const telegramClient = new TelegramClient({
 	accessToken: process.env.TELEGRAM_BOT_TOKEN,
@@ -71,6 +71,7 @@ async function sendTelegramMessage(message) {
 
 async function setupWebhook() {
 	console.log("setupWebhook", process.env.SERVER_URL);
+	console.log("adsfsadfs", __dirname + ".env");
 	await telegramClient.setWebhook(`${process.env.SERVER_URL}/webhook`);
 }
 
