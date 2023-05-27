@@ -25,4 +25,4 @@ router.get("/", async (req, res) => {
 	}
 });
 
-export { router as lineupRoute };
+export { router as webhookRoute };
