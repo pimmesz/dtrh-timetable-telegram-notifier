@@ -39,9 +39,13 @@ async function respondToTelegramMessages(message) {
 			savedArtists,
 			"popularity"
 		);
+
+		// Telegram has a max message length of 9499 characters
+		const maxLength = 9499;
 		const telegramMessage = generateTelegramMessage(
 			savedArtistSortedByPopularity
-		);
+		).substring(0,maxLength);
+		
 		sendTelegramMessage(
 			"The full DTRH line-up ranked by Spotify popularity!\n\n".concat(
 				telegramMessage
