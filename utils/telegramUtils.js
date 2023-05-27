@@ -45,6 +45,7 @@ async function respondToTelegramMessages(message) {
 		const telegramMessage = generateTelegramMessage(
 			savedArtistSortedByPopularity
 		).substring(0,maxLength);
+		console.log('telegramMessage Length', telegramMessage);
 		
 		sendTelegramMessage(
 			"The full DTRH line-up ranked by Spotify popularity!\n\n".concat(
