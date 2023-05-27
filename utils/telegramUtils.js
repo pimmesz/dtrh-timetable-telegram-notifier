@@ -65,7 +65,7 @@ async function sendTelegramMessage(message) {
 		return;
 	}
 	
-	const maxLength = 9000;
+	const maxLength = 5000;
 	console.log('Chat message length before altering', message.length);
 	let messageSubstringed = message.substring(0, maxLength);
 	messageSubstringed = messageSubstringed.substr(0, messageSubstringed.lastIndexOf("\n\n"));;
