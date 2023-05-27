@@ -14,6 +14,7 @@ import * as Spotify from "./utils/spotifyUtils.js";
 
 // Routes
 import { webhookRoute } from "./routes/webhook.js";
+import { lineupRoute } from "./routes/lineupRoute.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,7 @@ async function startDataCollectionCronjob() {
 
 // Routes
 app.use("/webhook", webhookRoute);
+app.use("/getlineup", lineupRoute);
 
 const server = http.createServer(app);
 
