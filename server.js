@@ -14,7 +14,7 @@ import * as Spotify from "./utils/spotifyUtils.js";
 
 // Routes
 import { webhookRoute } from "./routes/webhook.js";
-import { lineupRoute } from "./routes/lineupRoute.js";
+import { lineupRoute } from "./routes/lineup.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
