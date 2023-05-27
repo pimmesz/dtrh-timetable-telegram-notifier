@@ -65,12 +65,12 @@ async function sendTelegramMessage(message) {
 		return;
 	}
 	
-	const maxLength = 9400;
+	const maxLength = 9499;
 	console.log('Chat message length before altering', message.length);
 	const messageSubstringed = message.substring(0, maxLength);
 
 	try {
-		await telegramClient.sendMessage(process.env.TELEGRAM_CHAT_ID, message, {
+		await telegramClient.sendMessage(process.env.TELEGRAM_CHAT_ID, messageSubstringed, {
 			disableWebPagePreview: true,
 			disableNotification: true,
 			parseMode: "html",
