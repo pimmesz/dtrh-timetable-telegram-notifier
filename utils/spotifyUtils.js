@@ -139,7 +139,7 @@ async function getArtistInfoFromSpotify(artists) {
 			const artistData = (await spotifyApi.searchArtists(artist)).body.artists
 				.items[0];
 
-			if (artist !== artistData.name) {
+			if (artist !== artistData?.name) {
 				return {
 					name: artist,
 				};
